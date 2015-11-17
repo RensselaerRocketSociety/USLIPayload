@@ -50,19 +50,9 @@ loop(){
 
 		float gpsAltitude = gpsModule.getAltitude();
 
-		try{
-
-			writeToSD(ALL_DATA);
-
-		} catch SD_IS_BUSY {
-
-			WAIT;
-		}
-
-		XBEE.transmit(ALL_DATA);
+		SD_Card_Store.store_all_data(ALL_DATA);
 
 	}
-
 
 }
 ```
@@ -72,24 +62,77 @@ loop(){
 ```
 loop(){
 
-	var humidtyData = H1H4030.collectData();
+	if(rocket_is_landed){
 
-	humidtyData.convertUnits();
+		for(int i = 0; i < sizeof(SD_Data_Size); i++){
 
-	var	solarData = solarCell.collectData();
+			Serial.println(SD_Card_Store[i]);
+		}
+	}
 
-	var uvData = uvSensor.collectData();
+	else{
 
-	try{
+		var humidtyData = H1H4030.collectData();
 
-		writeToSD(ALL_DATA);
+		humidtyData.convertUnits();
 
-	} catch SD_IS_BUSY {
+		var	solarData = solarCell.collectData();
+
+		var uvData = uvSensor.collectData();
+
+	}
+}
+
+```
+
+## Drag Flap System
+
+```
+
+loop(){
+	
+	if(rocket_is_accelerating){
 
 		WAIT;
 	}
 
-	
+	else if(rocket_is_at_apogee){
+
+		CLOSE_FLAPS
+	}
+
+	else{
+
+		var newDragFlapAngle = DO MAGIC MOD-CON THINGS HERE;
+
+		var currentDragFlapAngle = getCurrentAngle();
+
+		if( newDragFlapAngle > currentDragFlapAngle ){
+
+			while currentDragFlapAngle != newDragFlapAngle{
+
+				turnMotorUp();
+			}
+
+		}
+
+		else{
+
+			while currentDragFlapAngle != newDragFlapAngle{
+
+				turnMotorDown();
+			}
+
+		}
+
+
+
+
+	}
+
+
+
+
 
 }
 
