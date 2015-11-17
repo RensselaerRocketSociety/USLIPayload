@@ -44,7 +44,22 @@ loop(){
 		float magnetometerZ =  adafruitDOF.collectData(magnetometer.Z());
 
 
-		
+		float gpsLongitude = gpsModule.getLongitude();
+
+		float gpsLatitude = gpsModule.getLatitude();
+
+		float gpsAltitude = gpsModule.getAltitude();
+
+		try{
+
+			writeToSD(ALL_DATA);
+
+		} catch SD_IS_BUSY {
+
+			WAIT;
+		}
+
+		XBEE.transmit(ALL_DATA);
 
 	}
 
@@ -52,21 +67,27 @@ loop(){
 }
 ```
 
-
-
-
 ##### Nanduino Two
 
 ```
 loop(){
 
-	var humidtyData = H1H4030.gatherData();
+	var humidtyData = H1H4030.collectData();
 
 	humidtyData.convertUnits();
 
-	var	
+	var	solarData = solarCell.collectData();
 
+	var uvData = uvSensor.collectData();
 
+	try{
+
+		writeToSD(ALL_DATA);
+
+	} catch SD_IS_BUSY {
+
+		WAIT;
+	}
 
 	
 
