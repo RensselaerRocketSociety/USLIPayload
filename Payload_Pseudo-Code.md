@@ -138,5 +138,26 @@ loop(){
 
 ```
 	
+## Camera Subsystem
 
+```
+int picsTaken = 0;
+// randomish value for now. We just don't want to take the pictures at the same time.
+// Because that would be dumb
+int sleepTime = 0; 
+
+loop() {
+	// DO OTHER STUFF
+	if (sleepTime == 0) {
+		if ((descending && picsTaken < 2) || (landed && picsTaken < 5)) {
+			takePicture();
+			picsTaken++;
+			sleepTime = 50000;
+		}
+	} else if (landed || descending) {
+		sleepTime--;
+	}
+}
+
+```
 	
